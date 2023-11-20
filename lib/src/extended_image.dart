@@ -849,7 +849,7 @@ class ExtendedImage extends StatefulWidget {
   ) {
     switch (state.extendedImageLoadState) {
       case LoadState.loading:
-        return Container(
+        return Align(
           alignment: Alignment.center,
           child: Theme.of(context).platform == TargetPlatform.iOS
               ? const CupertinoActivityIndicator(
@@ -866,13 +866,13 @@ class ExtendedImage extends StatefulWidget {
       case LoadState.completed:
         return state.completedWidget;
       case LoadState.failed:
-        return Container(
+        return Align(
           alignment: Alignment.center,
           child: GestureDetector(
             onTap: () {
               state.reLoadImage();
             },
-            child: const Text('Failed to load image'),
+            child: const Icon(Icons.error),
           ),
         );
     }

@@ -6,13 +6,14 @@ repository: https://github.com/fluttercandies/extended_image
 issue_tracker: https://github.com/fluttercandies/extended_image/issues
 
 environment:
-  sdk: '>=2.18.0 <4.0.0'
-  flutter: '>=3.13.0'
+  sdk: '>=3.2.0 <4.0.0'
+  flutter: '>=3.16.0'
 
 dependencies:
   extended_image_library:
     git: https://github.com/kumsumit/extended_image_library.git 
   flutter:
     sdk: flutter
-  meta: ^1.9.1
-dependency_overrides:
+  meta: ^1.10.0
+dev_dependency:
+  lints: ^3.0.0

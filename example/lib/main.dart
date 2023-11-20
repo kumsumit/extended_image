@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         if (!kIsWeb) {
           final MediaQueryData data = MediaQuery.of(c);
           w = MediaQuery(
-            data: data.copyWith(textScaleFactor: 1.0),
+            data: data.copyWith(textScaler: const TextScaler.linear(1.0)),
             child: w,
           );
         }
