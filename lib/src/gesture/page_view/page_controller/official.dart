@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 part 'page_position.dart';
 part 'page_controller.dart';
 
+/// [PageController]
 class _PageController extends ScrollController {
   /// Creates a page controller.
   ///
@@ -45,18 +46,18 @@ class _PageController extends ScrollController {
 
   /// The current page displayed in the controlled [PageView].
   ///
-  /// There are circumstances that this [_PageController] can't know the current
+  /// There are circumstances that this [PageController] can't know the current
   /// page. Reading [page] will throw an [AssertionError] in the following cases:
   ///
-  /// 1. No [PageView] is currently using this [_PageController]. Once a
-  /// [PageView] starts using this [_PageController], the new [page]
+  /// 1. No [PageView] is currently using this [PageController]. Once a
+  /// [PageView] starts using this [PageController], the new [page]
   /// position will be derived:
   ///
   ///   * First, based on the attached [PageView]'s [BuildContext] and the
   ///     position saved at that context's [PageStorage] if [keepPage] is true.
-  ///   * Second, from the [_PageController]'s [initialPage].
+  ///   * Second, from the [PageController]'s [initialPage].
   ///
-  /// 2. More than one [PageView] using the same [_PageController].
+  /// 2. More than one [PageView] using the same [PageController].
   ///
   /// The [hasClients] property can be used to check if a [PageView] is attached
   /// prior to accessing [page].
@@ -78,8 +79,6 @@ class _PageController extends ScrollController {
   ///
   /// The animation lasts for the given duration and follows the given curve.
   /// The returned [Future] resolves when the animation completes.
-  ///
-  /// The `duration` and `curve` arguments must not be null.
   Future<void> animateToPage(
     int page, {
     required Duration duration,
@@ -116,8 +115,6 @@ class _PageController extends ScrollController {
   ///
   /// The animation lasts for the given duration and follows the given curve.
   /// The returned [Future] resolves when the animation completes.
-  ///
-  /// The `duration` and `curve` arguments must not be null.
   Future<void> nextPage({required Duration duration, required Curve curve}) {
     return animateToPage(page!.round() + 1, duration: duration, curve: curve);
   }
@@ -126,16 +123,19 @@ class _PageController extends ScrollController {
   ///
   /// The animation lasts for the given duration and follows the given curve.
   /// The returned [Future] resolves when the animation completes.
-  ///
-  /// The `duration` and `curve` arguments must not be null.
-  Future<void> previousPage(
-      {required Duration duration, required Curve curve}) {
+  Future<void> previousPage({
+    required Duration duration,
+    required Curve curve,
+  }) {
     return animateToPage(page!.round() - 1, duration: duration, curve: curve);
   }
 
   @override
-  ScrollPosition createScrollPosition(ScrollPhysics physics,
-      ScrollContext context, ScrollPosition? oldPosition) {
+  ScrollPosition createScrollPosition(
+    ScrollPhysics physics,
+    ScrollContext context,
+    ScrollPosition? oldPosition,
+  ) {
     return _PagePosition(
       physics: physics,
       context: context,
@@ -163,13 +163,10 @@ class _PagePosition extends ScrollPositionWithSingleContext
     bool keepPage = true,
     double viewportFraction = 1.0,
     super.oldPosition,
-  })  : assert(viewportFraction > 0.0),
-        _viewportFraction = viewportFraction,
-        _pageToUseOnStartup = initialPage.toDouble(),
-        super(
-          initialPixels: null,
-          keepScrollOffset: keepPage,
-        );
+  }) : assert(viewportFraction > 0.0),
+       _viewportFraction = viewportFraction,
+       _pageToUseOnStartup = initialPage.toDouble(),
+       super(initialPixels: null, keepScrollOffset: keepPage);
 
   final int initialPage;
   double _pageToUseOnStartup;
@@ -226,7 +223,8 @@ class _PagePosition extends ScrollPositionWithSingleContext
 
   double getPageFromPixels(double pixels, double viewportDimension) {
     assert(viewportDimension > 0.0);
-    final double actual = math.max(0.0, pixels - _initialPageOffset) /
+    final double actual =
+        math.max(0.0, pixels - _initialPageOffset) /
         (viewportDimension * viewportFraction);
     final double round = actual.roundToDouble();
     if ((actual - round).abs() < precisionErrorTolerance) {
@@ -249,22 +247,27 @@ class _PagePosition extends ScrollPositionWithSingleContext
         ? null
         : _cachedPage ??
             getPageFromPixels(
-                clampDouble(pixels, minScrollExtent, maxScrollExtent),
-                viewportDimension);
+              clampDouble(pixels, minScrollExtent, maxScrollExtent),
+              viewportDimension,
+            );
   }
 
   @override
   void saveScrollOffset() {
     PageStorage.maybeOf(context.storageContext)?.writeState(
-        context.storageContext,
-        _cachedPage ?? getPageFromPixels(pixels, viewportDimension));
+      context.storageContext,
+      _cachedPage ?? getPageFromPixels(pixels, viewportDimension),
+    );
   }
 
   @override
   void restoreScrollOffset() {
     if (!hasPixels) {
-      final double? value = PageStorage.maybeOf(context.storageContext)
-          ?.readState(context.storageContext) as double?;
+      final double? value =
+          PageStorage.maybeOf(
+                context.storageContext,
+              )?.readState(context.storageContext)
+              as double?;
       if (value != null) {
         _pageToUseOnStartup = value;
       }
@@ -274,7 +277,8 @@ class _PagePosition extends ScrollPositionWithSingleContext
   @override
   void saveOffset() {
     context.saveOffset(
-        _cachedPage ?? getPageFromPixels(pixels, viewportDimension));
+      _cachedPage ?? getPageFromPixels(pixels, viewportDimension),
+    );
   }
 
   @override
@@ -354,12 +358,15 @@ class _PagePosition extends ScrollPositionWithSingleContext
     double? devicePixelRatio,
   }) {
     return PageMetrics(
-      minScrollExtent: minScrollExtent ??
+      minScrollExtent:
+          minScrollExtent ??
           (hasContentDimensions ? this.minScrollExtent : null),
-      maxScrollExtent: maxScrollExtent ??
+      maxScrollExtent:
+          maxScrollExtent ??
           (hasContentDimensions ? this.maxScrollExtent : null),
       pixels: pixels ?? (hasPixels ? this.pixels : null),
-      viewportDimension: viewportDimension ??
+      viewportDimension:
+          viewportDimension ??
           (hasViewportDimension ? this.viewportDimension : null),
       axisDirection: axisDirection ?? this.axisDirection,
       viewportFraction: viewportFraction ?? this.viewportFraction,
