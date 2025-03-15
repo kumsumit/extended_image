@@ -1,5 +1,5 @@
 library extended_image;
-
+export 'package:extended_image_library/extended_image_library.dart';
 export 'src/border_painter.dart';
 export 'src/editor/edit_action_details.dart';
 export 'src/editor/editor.dart';
