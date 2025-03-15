@@ -107,7 +107,7 @@ class ExtendedImageCropLayerState extends State<ExtendedImageCropLayer>
         cornerColor: cornerColor,
         cornerSize: editConfig.cornerSize,
         lineColor: editConfig.lineColor ??
-            Theme.of(context).scaffoldBackgroundColor.withOpacity(0.7),
+            Theme.of(context).scaffoldBackgroundColor.withAlpha(200),
         lineHeight: editConfig.lineHeight,
         maskColor: maskColor,
         pointerDown: _pointerDown,
@@ -317,8 +317,7 @@ class ExtendedImageCropLayerState extends State<ExtendedImageCropLayer>
             max(bottomLeft.dy, result.top + gWidth * 2));
         result = Rect.fromPoints(bottomLeft, result.topRight);
         break;
-      default:
-    }
+      }
 
     // result = Rect.fromPoints(
     //     Offset(
@@ -328,7 +327,7 @@ class ExtendedImageCropLayerState extends State<ExtendedImageCropLayer>
 
     ///make sure crop rect doesn't out of image rect
     result = Rect.fromPoints(
-        Offset(max(result!.left, layerDestinationRect!.left),
+        Offset(max(result.left, layerDestinationRect!.left),
             max(result.top, layerDestinationRect.top)),
         Offset(min(result.right, layerDestinationRect.right),
             min(result.bottom, layerDestinationRect.bottom)));
@@ -418,8 +417,7 @@ class ExtendedImageCropLayerState extends State<ExtendedImageCropLayer>
           }
           result = Rect.fromLTWH(left, top, width, height);
           break;
-        default:
-      }
+        }
     }
     return result;
   }

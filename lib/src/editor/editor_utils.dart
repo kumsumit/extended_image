@@ -535,7 +535,7 @@ Rect getDestinationRect({
 Color defaultEditorMaskColorHandler(BuildContext context, bool pointerDown) {
   return Theme.of(context)
       .scaffoldBackgroundColor
-      .withOpacity(pointerDown ? 0.4 : 0.8);
+      .withAlpha(pointerDown ? 110 : 230);
 }
 
 Offset rotateOffset(Offset input, Offset center, double angle) {
